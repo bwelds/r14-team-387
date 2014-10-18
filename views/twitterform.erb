@@ -1,4 +1,5 @@
-
+		
+		
 		<form role="form" autocomplete="on" action="/index" method="POST" >
         
 			<div class="row">
@@ -8,7 +9,7 @@
 		        <div class="col-xs-3">
 		          <div class="form-group">
 		          	
-		            <input type="text" value="<%= @handle %>" placeholder="Enter a Twitter handle" class="form-control" name="handle" id="handle">
+		            <input type="text" onfocus="if(this.value == '<%= @handle %>') { this.value = ''; }" value="<%= @handle %>" placeholder="Enter a Twitter handle" class="form-control" name="handle" id="handle">
 		            <!-- <label class="text-field-icon fui-user" for="twitter-handle"></label> -->
 		          </div>
 		        </div>

@@ -38,6 +38,9 @@
       </nav><!-- /navbar -->
     </div>
     <div class="container">
+        <% if (@handle == "biancawelds") %>
+          <p>Click in the box below and enter a Twitter handle</p>
+        <% end %>
         <%= yield %>
     </div>
     <!-- /.container -->
