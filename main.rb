@@ -7,7 +7,6 @@ end
 
 
 
-
 ["/", "/index/?"].each do |path|
       get path do
       	@handle = "biancawelds"
@@ -18,7 +17,7 @@ end
 post '/index' do
 	   @handle = params[:handle]
 	   erb :"content", layout: :"layouts/main"
-	   
+
 
 end
 

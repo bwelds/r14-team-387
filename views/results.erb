@@ -4,9 +4,58 @@
 	 
 	    	<h3>Results for <%= @handle %>!</h3>
 	    	
-	    	<div>
-				Milestones go here
-	    	</div>
+	    	<div class="row demo-tiles">
+		        <div class="col-xs-12">
+		          <div class="tile">
+		            <img src="img/icons/svg/compas.svg" alt="Compas" class="tile-image big-illustration">
+		            <h3 class="tile-title">You have a total of X tweets</h3>
+		            <p>You make on average A tweets per hour, B tweets in a day and C tweets over an entire week.</p>
+		           
+		          </div>
+		        </div>
+		    </div>
+		     
+		     <h4>Upcoming milestones tweets</h4>
+
+		      <div class="row demo-tiles">
+		        <div class="col-xs-3">
+		          <div class="tile">
+		            <img src="img/icons/svg/compas.svg" alt="Compas" class="tile-image big-illustration">
+		            <h3 class="tile-title">500</h3>
+		            <p>About so many hours/days/weeks away</p>
+		            <a class="btn btn-primary btn-large btn-block" href="http://designmodo.com/flat">Give me a heads up</a>
+		          </div>
+		        </div>
+
+		        <div class="col-xs-3">
+		          <div class="tile">
+		            <img src="img/icons/svg/loop.svg" alt="Infinity-Loop" class="tile-image">
+		            <h3 class="tile-title">1,000</h3>
+		            <p>About so many hours/days/weeks away</p>
+		            <a class="btn btn-primary btn-large btn-block" href="http://designmodo.com/flat">Give me a heads up</a>
+		          </div>
+		        </div>
+
+		        <div class="col-xs-3">
+		          <div class="tile">
+		            <img src="img/icons/svg/pencils.svg" alt="Pensils" class="tile-image">
+		            <h3 class="tile-title">5,000</h3>
+		            <p>About so many hours/days/weeks away</p>
+		            <a class="btn btn-primary btn-large btn-block" href="http://designmodo.com/flat">Give me a heads up</a>
+		          </div>
+		        </div>
+
+		        <div class="col-xs-3">
+		          <div class="tile">
+		            
+		            <img src="img/icons/svg/chat.svg" alt="Chat" class="tile-image">
+		            <h3 class="tile-title">10,000</h3>
+		            <p>About so many hours/days/weeks away</p>
+		            <a class="btn btn-primary btn-large btn-block" href="http://designmodo.com/flat">Give me a heads up</a>
+		          </div>
+
+		        </div>
+		      </div>
 	    	
 		<% else %>
 	    	<p>You must enter a Twitter handle.</p>
