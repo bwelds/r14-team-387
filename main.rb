@@ -5,6 +5,18 @@ use Rack::Auth::Basic, "Restricted Area" do |username, password|
   username == 'bianca' and password == 'whatthehell'
 end
 
-get '/' do
-  erb :"index", layout: :"layouts/main"
+
+
+
+["/", "/index/?"].each do |path|
+      get path do
+      	@handle = ""
+        erb :"index", layout: :"layouts/main"
+      end
+    end
+
+post '/index' do
+	   @handle = params[:handle]
+	   erb :"content", layout: :"layouts/main"
 end
+
