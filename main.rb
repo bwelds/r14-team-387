@@ -14,23 +14,26 @@ configure do
     enable :sessions
     set :session_secret, ENV['SESSION_SECRET']
 
-
-    set :tw_cons_key, ENV['TWITTER_CONSUMER_KEY']
-    set :tw_cons_secret, ENV['TWITTER_CONSUMER_SECRET']
-    set :tw_access_token, ENV['TWITTER_ACCESS_TOKEN']
-    set :tw_access_secret, ENV['TWITTER_ACCESS_TOKEN_SECRET']
-
 end
 
 before do
-  next if request.path_info =~ /ping$/
+  puts "user before"
+  puts @user
+  puts "session user before"
+  puts session[:user]
   @user = session[:user]
+  puts "user after"
+  puts @user
+  puts "session user after"
+  puts session[:user]
   @client = TwitterOAuth::Client.new(
-    :consumer_key => settings.tw_cons_key ,
-    :consumer_secret => settings.tw_cons_secret,
+    :consumer_key => ENV['TWITTER_CONSUMER_KEY'] ,
+    :consumer_secret => ENV['TWITTER_CONSUMER_SECRET'],
     :token => session[:access_token],
     :secret => session[:secret_token]
   )
+  puts "client"
+  puts @client
   @rate_limit_status = @client.rate_limit_status
 end
 
@@ -63,13 +66,20 @@ helpers do
     end
 end
 
-
-["/", "/index/?"].each do |path|
-	get path do
-		@handle = "biancawelds"
-		erb :"index", layout: :"layouts/main"
-	end
+get '/' do
+  puts "get /"
+  puts @user
+  puts session[:user]
+  redirect '/milestones' if @user
+  @handle = "biancawelds"
+  erb :index, layout: :"layouts/main"
 end
+
+	get '/index' do
+		@handle = "biancawelds"
+		erb :index, layout: :"layouts/main"
+	end
+
 
 post '/index' do
    @handle = params[:handle]
@@ -138,23 +148,106 @@ post '/index' do
 end
 
 get '/milestones' do
-	@tweets = @client.home_timeline
-	erb :"milestones", layout: :"layouts/main"
+	#@tweets = @client.home_timeline
+  puts "client"
+  
+  puts @client
+  @total = @client.info['statuses_count']
+  puts "total"
+  puts @client.info['statuses_count']
+ puts @total
+  
+  @averages_text = ""
+   @far_away_text = "About "
+
+
+   @next_1k = next_highest(@total,1000)
+   puts "next 1k"
+   puts @next_1k
+   @next_5k = next_highest(@total,5000)
+   puts "next 5k"
+   puts @next_1k
+   @next_10k = next_highest(@total,10000)
+   puts "next 10k"
+   puts @next_1k
+
+
+   @average_per_hour = average_per_time((@total/100),672)    
+
+   @average_per_day = average_per_time((@total/100),28)
+
+
+   @average_per_week = average_per_time((@total/100),4)
+
+   if @average_per_hour >= 1 
+    
+      @averages_text = @averages_text + @average_per_hour.to_s + " " + plural(@average_per_hour,"tweet") + " per hour, " 
+      @hours_from_1k = @next_1k[:distance]/@average_per_hour
+      @hours_from_5k = @next_5k[:distance]/@average_per_hour
+      @hours_from_10k = @next_10k[:distance]/@average_per_hour
+
+      
+        
+      @hours_away_1k = @far_away_text + @hours_from_1k.to_s + " " + plural(@hours_from_1k.to_i,"hour") + " away"
+      @hours_away_5k = @far_away_text + @hours_from_5k.to_s + " " + plural(@hours_from_5k.to_i,"hour") + " away" 
+      @hours_away_10k = @far_away_text + @hours_from_10k.to_s + " " + plural(@hours_from_10k.to_i,"hour") + " away" 
+      
+   end
+   if @average_per_day >= 1 
+      @averages_text = @averages_text + @average_per_day.to_s + " " + plural(@average_per_day,"tweet") + " per day, "
+      @days_from_1k = @next_1k[:distance]/@average_per_day 
+      @days_from_5k = @next_5k[:distance]/@average_per_day
+      @days_from_10k = @next_10k[:distance]/@average_per_day
+      
+
+      @days_away_1k = @far_away_text + @days_from_1k.to_s + " " + plural(@days_from_1k.to_i,"day")  + " away"
+      @days_away_5k = @far_away_text + @days_from_5k.to_s + " " + plural(@days_from_5k.to_i,"day")  + " away"
+      @days_away_10k = @far_away_text + @days_from_10k.to_s + " " + plural(@days_from_10k.to_i,"day")  + " away"
+    end
+   if @average_per_week >= 1 
+      
+      @weeks_from_1k = @next_1k[:distance]/@average_per_week
+      @weeks_from_5k = @next_5k[:distance]/@average_per_week
+      @weeks_from_10k = @next_10k[:distance]/@average_per_week
+
+      @averages_text = @averages_text + @average_per_week.to_s + " " + plural(@average_per_week,"tweet") + " over an entire week." 
+      @weeks_away_1k = @far_away_text + @weeks_from_1k.to_s + " " + plural(@weeks_from_1k.to_i,"week")  + " away"
+      @weeks_away_5k = @far_away_text + @weeks_from_5k.to_s + " " + plural(@weeks_from_5k.to_i,"week")  + " away"
+      @weeks_away_10k = @far_away_text + @weeks_from_10k.to_s + " " + plural(@weeks_from_10k.to_i,"week") + " away"
+    end
+
+    if @averages_text == ""
+      @averages_text = "Not enough tweets to calculate averages"
+    else
+      @averages_text = "and makes on average " + @averages_text
+    end
+
+
+
+
+	erb :milestones, layout: :"layouts/main"
 end
 
 get '/about' do
-	erb :"about", layout: :"layouts/main"
+	erb :about, layout: :"layouts/main"
 
 end
 
 # store the request tokens and send to Twitter
 get '/connect' do
-	request_token = @client.authentication_request_token(
+	request_token = @client.request_token(
 		:oauth_callback => ENV['CALLBACK_URL']
 		)
-	session[:request_token] = request_token.token
-	session[:request_token_secret] = request_token.secret
-	redirect request_token.authorize_url.gsub('authorize', 'authenticate')  
+  
+	   session[:request_token] = request_token.token
+     puts "session request token"
+     puts session[:request_token]
+	   session[:request_token_secret] = request_token.secret
+     puts "session request token secret"
+     puts session[:request_token_secret]
+	   redirect request_token.authorize_url
+   
+
 end
 
 # auth URL is called by twitter after the user has accepted the application
@@ -163,24 +256,43 @@ get '/auth' do
   # Exchange the request token for an access token.
   
   begin
-    @access_token = @client.authorize(
+    puts "session request token"
+     puts session[:request_token]
+     puts "session request token secret"
+     puts session[:request_token_secret]
+     puts "oauth verifier"
+     puts params[:oauth_verifier]
+     @access_token = @client.authorize(
       session[:request_token],
       session[:request_token_secret],
       :oauth_verifier => params[:oauth_verifier]
     )
-  rescue OAuth::Unauthorized
-  end
+     puts "access token"
+     puts @access_token
+     puts "access token token"
+     puts @access_token.token
+     puts "access token secret"
+     puts @access_token.secret
+   rescue OAuth::Unauthorized
+   end
   
-  if @client.authorized?
-      # Storing the access tokens so we don't have to go back to Twitter again
-      # in this session.  In a larger app you would probably persist these details somewhere.
-      session[:access_token] = @access_token.token
-      session[:secret_token] = @access_token.secret
-      session[:user] = true
-      redirect '/milestones'
-    else
-      redirect '/connect'
-  end
+    puts @client.authorized?
+   if @client.authorized?
+       # Storing the access tokens so we don't have to go back to Twitter again
+       # in this session.  In a larger app you would probably persist these details somewhere.
+       session[:access_token] = @access_token.token
+       puts "session access token"
+        puts session[:access_token]
+       session[:secret_token] = @access_token.secret
+       puts "session secret token"
+        puts session[:secret_token]
+       session[:user] = true
+       puts "session user"
+        puts session[:user]
+       redirect '/milestones'
+     else
+       redirect '/disconnect'
+    end
 end
 
 get '/disconnect' do

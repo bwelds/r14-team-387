@@ -1,17 +1,58 @@
-<div class="timeline">
-    <% @tweets.each do |tweet| %>
-        <p>
-            <div style="float:left; margin:5px">
+<h3>Results for @<%= @client.info['screen_name'] %>!</h3>
+            
+            <div class="row demo-tiles">
+                <div class="col-xs-12">
+                  <div class="tile">
+                    <img src="img/icons/svg/Trolley.svg" alt="Trolley" class="tile-image big-illustration">
+                    <h3 class="tile-title">@<%= @client.info['screen_name'] %> has a total of <%= @total %> tweets</h3>
+                    <p> <%= @averages_text %>
+                   
+                   
+                  </div>
+                </div>
+            </div>
 
-                <a href="http://twitter.com/<%= tweet['user']['screen_name'] %>">
-                    <img src="<%= tweet['user']['profile_image_url'] %>" width="48" height="48"/>
-                </a>
-            </div>
-            <div style="">
-                <a href="http://twitter.com/<%= tweet['user']['screen_name'] %>">@<%= tweet['user']['screen_name'] %></a>
-                <%= tweet['text'] %>
-            </div>
-            <br clear="all"/>
-        </p>
-    <% end %>
-</div>
+<h4>Upcoming milestone tweets</h4>
+
+        <div class="row demo-tiles">
+                
+
+                <div class="col-xs-4">
+                  <div class="tile">
+                    <img src="img/icons/svg/heart.svg" alt="Heart" class="tile-image">
+                    <h3 class="tile-title"><%= @next_1k[:result] %></h3>
+                    <p><%= @hours_away_1k %></p>
+                    <p><%= @days_away_1k %></p>
+                    <p><%= @weeks_away_1k %></p>
+                    <a class="btn btn-primary btn-large btn-block" href="http://designmodo.com/flat">Give me a heads up</a>
+                  </div>
+                </div>
+
+                <div class="col-xs-4">
+                  <div class="tile">
+                    <img src="img/icons/svg/coins.svg" alt="Coins" class="tile-image">
+                    <h3 class="tile-title"><%= @next_5k[:result] %></h3>
+                    <p><%= @hours_away_5k %></p>
+                    <p><%= @days_away_5k %></p>
+                    <p><%= @weeks_away_5k %></p>
+                    <a class="btn btn-primary btn-large btn-block" href="http://designmodo.com/flat">Give me a heads up</a>
+                  </div>
+                </div>
+
+                <div class="col-xs-4">
+                  <div class="tile">
+                    
+                    <img src="img/icons/svg/thoughts.svg" alt="Thoughts" class="tile-image">
+                    <h3 class="tile-title"><%= @next_10k[:result] %></h3>
+                    <p><%= @hours_away_10k %></p>
+                    <p><%= @days_away_10k %></p>
+                    <p><%= @weeks_away_10k %></p>
+                    <a class="btn btn-primary btn-large btn-block" href="http://designmodo.com/flat">Give me a heads up</a>
+                  </div>
+
+                </div>
+
+        </div>
+
+
+
