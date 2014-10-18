@@ -142,5 +142,17 @@ get '/about' do
 
 end
 
+get '/connect' do
+	request_token = @client.request_token(
+		
+		)
+	session[:request_token] = request_token.token
+	session[:request_token_secret] = request_token.secret
+	redirect request_token.authorize_url  
+end
+
+get '/ping' do 
+  'pong'
+end
 
 
