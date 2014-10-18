@@ -49,3 +49,14 @@ body   {
 h1 {
   text-align: center;
 }
+
+.img-thumbnail {
+  width:250px;
+  float:left;
+  margin-right: 20px;
+}
+
+.lead {
+  margin-bottom: 5px;
+  line-height: 1.2;
+  }

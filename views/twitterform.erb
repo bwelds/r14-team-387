@@ -1,4 +1,6 @@
-		
+		<% if (@handle == "biancawelds" || @handle.empty?) %>
+          <p style="text-align:center;">Click in the box below and enter a Twitter handle</p>
+        <% end %>
 		
 		<form role="form" autocomplete="on" action="/index" method="POST" >
         
