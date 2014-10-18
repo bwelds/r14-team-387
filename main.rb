@@ -1,10 +1,37 @@
+#!/usr/bin/env ruby
+
 require 'rubygems'
 require 'sinatra'
 require 'data_mapper'
+require 'twitter_oauth'
 
 
 use Rack::Auth::Basic, "Restricted Area" do |username, password|
   username == 'bianca' and password == 'whatthehell'
+end
+
+configure do
+    enable :sessions
+    set :session_secret, ENV['SESSION_SECRET']
+
+
+    set :tw_cons_key, ENV['TWITTER_CONSUMER_KEY']
+    set :tw_cons_secret, ENV['TWITTER_CONSUMER_SECRET']
+    set :tw_access_token, ENV['TWITTER_ACCESS_TOKEN']
+    set :tw_access_secret, ENV['TWITTER_ACCESS_TOKEN_SECRET']
+
+end
+
+before do
+  next if request.path_info =~ /ping$/
+  @user = session[:user]
+  @client = TwitterOAuth::Client.new(
+    :consumer_key => settings.tw_cons_key ,
+    :consumer_secret => settings.tw_cons_secret,
+    :token => session[:access_token],
+    :secret => session[:secret_token]
+  )
+  @rate_limit_status = @client.rate_limit_status
 end
 
 
