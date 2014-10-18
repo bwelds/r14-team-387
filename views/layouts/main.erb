@@ -10,7 +10,7 @@
 
     <!-- Loading Flat UI -->
     <link href="css/flat-ui.css" rel="stylesheet">
-
+    <link href="css/style.css" rel="stylesheet">
     <link rel="shortcut icon" href="img/favicon.ico">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
@@ -20,11 +20,56 @@
     <![endif]-->
   </head>
   <body>
+  	<div class="col-xs-12 header">
+      <nav class="navbar navbar-inverse navbar-embossed" role="navigation">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-01">
+            <span class="sr-only">Toggle navigation</span>
+          </button>
+          <a class="navbar-brand" href="#">Flat UI</a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbar-collapse-01">
+          <ul class="nav navbar-nav navbar-left">
+            <li><a href="#fakelink">Menu Item<span class="navbar-unread">1</span></a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Messages <b class="caret"></b></a>
+              <span class="dropdown-arrow"></span>
+              <ul class="dropdown-menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li class="divider"></li>
+                <li><a href="#">Separated link</a></li>
+              </ul>
+            </li>
+            <li><a href="#fakelink">About Us</a></li>
+           </ul>
+        </div><!-- /.navbar-collapse -->
+      </nav><!-- /navbar -->
+    </div>
     <div class="container">
         <%= yield %>
     </div>
     <!-- /.container -->
 
+    <div class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12">
+         
+       
+
+            
+
+            <a class="footer-brand" href="http://biancawelds.com" target="_blank">
+              Created by Bianca Welds
+            </a>
+          </div> <!-- /col-xs-12 -->
+
+          
+        </div>
+      </div>
+    </div>
 
     <!-- jQuery (necessary for Flat UI's JavaScript plugins) -->
     <script src="js/vendor/jquery.min.js"></script>
