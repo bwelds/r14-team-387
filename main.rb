@@ -1,5 +1,7 @@
 require 'rubygems'
 require 'sinatra'
+require 'data_mapper'
+
 
 use Rack::Auth::Basic, "Restricted Area" do |username, password|
   username == 'bianca' and password == 'whatthehell'
