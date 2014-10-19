@@ -5,6 +5,7 @@ require 'sinatra'
 require 'data_mapper'
 require 'twitter'
 require 'twitter_oauth'
+require 'date'
 
 
 use Rack::Auth::Basic, "Restricted Area" do |username, password|
@@ -19,8 +20,8 @@ end
 
 before do
   
-  puts "session user"
-  puts session[:user]
+  # puts "session user"
+  # puts session[:user]
   
       @client = TwitterOAuth::Client.new(
         :consumer_key => ENV['TWITTER_CONSUMER_KEY'] ,
@@ -28,8 +29,8 @@ before do
         :token => session[:access_token] ||  ENV['TWITTER_ACCESS_TOKEN'],
         :secret => session[:secret_token] || ENV['TWITTER_ACCESS_TOKEN_SECRET']
       )
-      puts "client"
-      puts @client
+      # puts "client"
+      # puts @client
       @rate_limit_status = @client.rate_limit_status
   
   @twclient = Twitter::REST::Client.new do |config|
@@ -47,8 +48,8 @@ helpers do
     end
 
     def next_highest(total,divisor) 
-    	distance = divisor - (total%divisor)
-        result = total + (distance)
+    	distance = divisor - (total.to_i%divisor)
+        result = total.to_i + distance
         next_result = {
 	        :distance => distance.to_i,
 	        :result => comma_numbers(result,','),
@@ -65,6 +66,9 @@ helpers do
     	recent/period
     end
 
+    
+
+
     def plural(number,word)
     	if number>1 
     		word = word + "s" 
@@ -74,8 +78,8 @@ helpers do
 end
 
 get '/' do
-  puts "get /"
-  puts session[:user]
+  # puts "get /"
+  # puts session[:user]
   if loggedin?
     redirect '/milestones'
   else
@@ -97,6 +101,20 @@ post '/index' do
     end
 
    @total = @twclient.user(@handle)['statuses_count']
+   @tweets = @twclient.user_timeline(@handle, :count => 100)
+
+   puts @tweets.first.text
+     puts newest = @tweets.first.created_at
+     puts @tweets.count
+     puts @tweets.last.text
+    puts oldest = @tweets.last.created_at
+
+    time_for_recent_tweets = difference = ((newest - oldest).abs).round
+
+    puts hours_for_recent_tweets = time_for_recent_tweets/(60*60)
+    puts days_for_recent_tweets = hours_for_recent_tweets/24
+    puts weeks_for_recent_tweets = days_for_recent_tweets/7
+
    @averages_text = ""
    @far_away_text = "About "
 
@@ -106,12 +124,13 @@ post '/index' do
    @next_10k = next_highest(@total,10000)
 
 
-   @average_per_hour = average_per_time((@total/100),672)	   
+   @average_per_hour = 100/hours_for_recent_tweets	   
 
-   @average_per_day = average_per_time((@total/100),28)
+   @average_per_day = 100/days_for_recent_tweets
 
 
-   @average_per_week = average_per_time((@total/100),4)
+   @average_per_week = 100/weeks_for_recent_tweets
+
 
    if @average_per_hour >= 1 
    	
@@ -162,36 +181,57 @@ end
 
 get '/milestones' do
 	#@tweets = @client.home_timeline
-  puts "client"
+  # puts "client"
   
-  puts @client
+  # puts @client
   @total = @client.info['statuses_count']
-  puts "total"
-  puts @client.info['statuses_count']
- puts @total
   
-  @averages_text = ""
+   #@tweets = @client.user_timeline(:count => 100)
+   @tweets = @client.user_timeline(:count => 100)
+
+   puts newest = time_for(@tweets.first['created_at'])
+
+   puts oldest = time_for(@tweets.last['created_at'])
+
+
+
+     
+     #puts DateTime.parse(newest)
+     #puts @tweets.last.text
+    #puts oldest = @tweets.last.created_at
+    #puts DateTime.parse(oldest)
+    #time_for_recent_tweets = ((DateTime.parse(newest) - DateTime.parse(oldest)).abs).round
+    time_for_recent_tweets = ((newest - oldest).abs).round
+    puts hours_for_recent_tweets = time_for_recent_tweets/(60*60)
+    puts days_for_recent_tweets = hours_for_recent_tweets/24
+    puts weeks_for_recent_tweets = days_for_recent_tweets/7
+
+   @averages_text = ""
    @far_away_text = "About "
 
 
    @next_1k = next_highest(@total,1000)
-   puts "next 1k"
-   puts @next_1k
    @next_5k = next_highest(@total,5000)
-   puts "next 5k"
-   puts @next_1k
    @next_10k = next_highest(@total,10000)
-   puts "next 10k"
-   puts @next_1k
 
 
-   @average_per_hour = average_per_time((@total/100),672)    
+   if hours_for_recent_tweets >= 1 
+     @average_per_hour = 100/hours_for_recent_tweets 
+   else 
+      @average_per_hour = 0 
+  end  
+    if days_for_recent_tweets >= 1 
+       @average_per_day = 100/days_for_recent_tweets 
+     else 
+      @average_per_day = 0 
+    end
+   if weeks_for_recent_tweets >= 1 
+    @average_per_week = 100/weeks_for_recent_tweets 
+  else 
+    @average_per_week = 0 
+  end
 
-   @average_per_day = average_per_time((@total/100),28)
-
-
-   @average_per_week = average_per_time((@total/100),4)
-
+   
    if @average_per_hour >= 1 
     
       @averages_text = @averages_text + @average_per_hour.to_s + " " + plural(@average_per_hour,"tweet") + " per hour, " 
@@ -253,11 +293,11 @@ get '/connect' do
 		)
   
 	   session[:request_token] = request_token.token
-     puts "session request token"
-     puts session[:request_token]
+     # puts "session request token"
+     # puts session[:request_token]
 	   session[:request_token_secret] = request_token.secret
-     puts "session request token secret"
-     puts session[:request_token_secret]
+     # puts "session request token secret"
+     # puts session[:request_token_secret]
 	   redirect request_token.authorize_url
    
 
@@ -269,23 +309,23 @@ get '/auth' do
   # Exchange the request token for an access token.
   
   begin
-    puts "session request token"
-     puts session[:request_token]
-     puts "session request token secret"
-     puts session[:request_token_secret]
-     puts "oauth verifier"
-     puts params[:oauth_verifier]
+    # puts "session request token"
+    #  puts session[:request_token]
+    #  puts "session request token secret"
+    #  puts session[:request_token_secret]
+    #  puts "oauth verifier"
+    #  puts params[:oauth_verifier]
      @access_token = @client.authorize(
       session[:request_token],
       session[:request_token_secret],
       :oauth_verifier => params[:oauth_verifier]
     )
-     puts "access token"
-     puts @access_token
-     puts "access token token"
-     puts @access_token.token
-     puts "access token secret"
-     puts @access_token.secret
+     # puts "access token"
+     # puts @access_token
+     # puts "access token token"
+     # puts @access_token.token
+     # puts "access token secret"
+     # puts @access_token.secret
    rescue OAuth::Unauthorized
    end
   
@@ -294,14 +334,14 @@ get '/auth' do
        # Storing the access tokens so we don't have to go back to Twitter again
        # in this session.  In a larger app you would probably persist these details somewhere.
        session[:access_token] = @access_token.token
-       puts "session access token"
-        puts session[:access_token]
+       # puts "session access token"
+       #  puts session[:access_token]
        session[:secret_token] = @access_token.secret
-       puts "session secret token"
-        puts session[:secret_token]
+       # puts "session secret token"
+       #  puts session[:secret_token]
        session[:user] = true
-       puts "session user"
-        puts session[:user]
+       # puts "session user"
+       #  puts session[:user]
        redirect '/milestones'
      else
        redirect '/disconnect'
@@ -309,17 +349,9 @@ get '/auth' do
 end
 
 #authentication failure
-    get '/auth/failure' do
-        # content_type :json
-        # status 400
-        # {
-        #     errors: {
-        #     type: params[:error_type],
-        #     message: (params[:message] || params[:error_reason])
-        #     }
-        # }.to_json
-        redirect '/error'
-    end
+  get '/auth/failure' do
+      redirect '/error'
+  end
 
 get '/disconnect' do
   session[:user] = nil
@@ -335,10 +367,29 @@ get '/ping' do
 end
 
 get '/error' do
-        erb :"error", layout: :"layouts/main"
-    end
+    erb :"error", layout: :"layouts/main"
+end
 
-    not_found do
-        erb :"notfound", layout: :"layouts/main"
-    end
+not_found do
+    erb :"notfound", layout: :"layouts/main"
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

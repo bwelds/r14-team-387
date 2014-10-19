@@ -1,0 +1,9 @@
+Tweets go here
+
+<p>Here are the most recent tweets from: @<%= @handle %></p>
+            <ol>
+                <% @tweets.each do |tweet| %>
+                    <li><%= tweet.text %></li>
+                <% end %>
+            </ol>
+
