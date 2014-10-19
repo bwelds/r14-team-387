@@ -49,7 +49,7 @@ end
 
 
 helpers do
-  def loggedin?
+    def loggedin?
             session[:user]
     end
 
@@ -72,7 +72,14 @@ helpers do
     	recent/period
     end
 
-    
+    def disconnect()
+      session[:user] = nil
+      session[:request_token] = nil
+      session[:request_token_secret] = nil
+      session[:access_token] = nil
+      session[:secret_token] = nil
+      
+    end
 
 
     def plural(number,word)
@@ -190,6 +197,11 @@ post '/index' do
 end
 
 get '/milestones' do
+
+  if !loggedin?
+    redirect '/index'
+  else
+    
 	#@tweets = @client.home_timeline
   # puts "client"
   
@@ -290,6 +302,8 @@ get '/milestones' do
 
 
 	erb :milestones, layout: :"layouts/main"
+
+  end
 end
 
 get '/email' do
@@ -383,8 +397,13 @@ get '/auth' do
        #  puts session[:user]
        redirect '/milestones'
      else
-       redirect '/disconnect'
+       redirect '/unauthorized'
     end
+end
+
+get '/unauthorized' do
+  disconnect
+  erb :"unauthorized", layout: :"layouts/main"
 end
 
 #authentication failure
@@ -393,11 +412,7 @@ end
   end
 
 get '/disconnect' do
-  session[:user] = nil
-  session[:request_token] = nil
-  session[:request_token_secret] = nil
-  session[:access_token] = nil
-  session[:secret_token] = nil
+  disconnect
   redirect '/'
 end
 
