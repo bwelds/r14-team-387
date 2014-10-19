@@ -95,11 +95,13 @@ get '/' do
   end
 end
 
-	get '/index' do
-		@handle = "railsrumble"
+	get '/index.?:handle?' do
+		@handle = params[:handle] || "railsrumble"
 
 		erb :index, layout: :"layouts/main"
 	end
+
+  
 
 
 post '/index' do

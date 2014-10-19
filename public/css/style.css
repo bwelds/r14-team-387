@@ -100,3 +100,11 @@ img#rr-logo {
 form#twitterform {
   margin-top: 1em;
 }
+
+ul#suggestions {
+    list-style-type:none; 
+    font-size: 0.8em;
+    text-align: left;
+    margin-left: 25%;
+
+}
