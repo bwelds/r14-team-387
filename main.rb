@@ -3,6 +3,7 @@
 require 'rubygems'
 require 'sinatra'
 require 'data_mapper'
+require 'twitter'
 require 'twitter_oauth'
 
 
@@ -17,28 +18,34 @@ configure do
 end
 
 before do
-  puts "user before"
-  puts @user
-  puts "session user before"
+  
+  puts "session user"
   puts session[:user]
-  @user = session[:user]
-  puts "user after"
-  puts @user
-  puts "session user after"
-  puts session[:user]
-  @client = TwitterOAuth::Client.new(
-    :consumer_key => ENV['TWITTER_CONSUMER_KEY'] ,
-    :consumer_secret => ENV['TWITTER_CONSUMER_SECRET'],
-    :token => session[:access_token],
-    :secret => session[:secret_token]
-  )
-  puts "client"
-  puts @client
-  @rate_limit_status = @client.rate_limit_status
+  
+      @client = TwitterOAuth::Client.new(
+        :consumer_key => ENV['TWITTER_CONSUMER_KEY'] ,
+        :consumer_secret => ENV['TWITTER_CONSUMER_SECRET'],
+        :token => session[:access_token] ||  ENV['TWITTER_ACCESS_TOKEN'],
+        :secret => session[:secret_token] || ENV['TWITTER_ACCESS_TOKEN_SECRET']
+      )
+      puts "client"
+      puts @client
+      @rate_limit_status = @client.rate_limit_status
+  
+  @twclient = Twitter::REST::Client.new do |config|
+      config.consumer_key    = ENV['TWITTER_CONSUMER_KEY']
+      config.consumer_secret = ENV['TWITTER_CONSUMER_SECRET']
+    end
+    
+  
 end
 
 
 helpers do
+  def loggedin?
+            session[:user]
+    end
+
     def next_highest(total,divisor) 
     	distance = divisor - (total%divisor)
         result = total + (distance)
@@ -68,22 +75,28 @@ end
 
 get '/' do
   puts "get /"
-  puts @user
   puts session[:user]
-  redirect '/milestones' if @user
-  @handle = "biancawelds"
-  erb :index, layout: :"layouts/main"
+  if loggedin?
+    redirect '/milestones'
+  else
+    redirect '/index'
+  end
 end
 
 	get '/index' do
-		@handle = "biancawelds"
+		@handle = "railsrumble"
+
 		erb :index, layout: :"layouts/main"
 	end
 
 
 post '/index' do
    @handle = params[:handle]
-   @total = rand(15000)
+   if params[:handle].nil?
+      erb :"content", layout: :"layouts/main"
+    end
+
+   @total = @twclient.user(@handle)['statuses_count']
    @averages_text = ""
    @far_away_text = "About "
 
@@ -142,7 +155,7 @@ post '/index' do
    	else
    		@averages_text = "and makes on average " + @averages_text
    	end
-
+    @client = @twclient
    erb :"content", layout: :"layouts/main"
 
 end
@@ -295,6 +308,19 @@ get '/auth' do
     end
 end
 
+#authentication failure
+    get '/auth/failure' do
+        # content_type :json
+        # status 400
+        # {
+        #     errors: {
+        #     type: params[:error_type],
+        #     message: (params[:message] || params[:error_reason])
+        #     }
+        # }.to_json
+        redirect '/error'
+    end
+
 get '/disconnect' do
   session[:user] = nil
   session[:request_token] = nil
@@ -308,4 +334,11 @@ get '/ping' do
   'pong'
 end
 
+get '/error' do
+        erb :"error", layout: :"layouts/main"
+    end
+
+    not_found do
+        erb :"notfound", layout: :"layouts/main"
+    end
 

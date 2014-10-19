@@ -28,7 +28,8 @@
 		            <p><%= @hours_away_1k %></p>
 		            <p><%= @days_away_1k %></p>
 		            <p><%= @weeks_away_1k %></p>
-		            <a class="btn btn-primary btn-large btn-block" href="http://designmodo.com/flat">Give me a heads up</a>
+		            <a class="btn btn-primary btn-large btn-block" href="#login-prompt"
+     data-toggle="modal">Give me a heads up</a>
 		          </div>
 		        </div>
 
@@ -61,4 +62,16 @@
 	    	<p>You must enter a Twitter handle.</p>
 		<% end %>
 
-
+<div class="modal" id="login-prompt">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">&times;</a>
+    <h3>Connect to Twitter</h3>
+  </div>
+  <div class="modal-body">
+    <p>If you connect to your Twitter account, then we will be able to add notifications for your own milestones.</p>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal">Close</a>
+    <a href="/connect" class="btn btn-primary">Connect</a>
+  </div>
+</div>

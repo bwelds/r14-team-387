@@ -60,3 +60,13 @@ h1 {
   margin-bottom: 5px;
   line-height: 1.2;
   }
+
+  #login-prompt {
+    /*new custom width*/
+    width: 50%;
+    height: 300px;
+    /*must be half of the width, minus scrollbar on the left (30px)*/
+   margin: 25% 0 0 25%;
+    background-color: white;
+    overflow:hidden;
+}
