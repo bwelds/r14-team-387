@@ -283,6 +283,11 @@ get '/milestones' do
 	erb :milestones, layout: :"layouts/main"
 end
 
+post '/email' do
+  erb :email, layout: :"layouts/main"
+end
+
+
 get '/about' do
 	erb :about, layout: :"layouts/main"
 

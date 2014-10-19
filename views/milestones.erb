@@ -24,7 +24,8 @@
                     <p><%= @hours_away_1k %></p>
                     <p><%= @days_away_1k %></p>
                     <p><%= @weeks_away_1k %></p>
-                    <a class="btn btn-primary btn-large btn-block" href="http://designmodo.com/flat">Give me a heads up</a>
+                    <a class="btn btn-primary btn-large btn-block" href="#prompt"
+     data-toggle="modal">Give me a heads up</a>
                   </div>
                 </div>
 
@@ -35,7 +36,8 @@
                     <p><%= @hours_away_5k %></p>
                     <p><%= @days_away_5k %></p>
                     <p><%= @weeks_away_5k %></p>
-                    <a class="btn btn-primary btn-large btn-block" href="http://designmodo.com/flat">Give me a heads up</a>
+                    <a class="btn btn-primary btn-large btn-block" href="#prompt"
+     data-toggle="modal">Give me a heads up</a>
                   </div>
                 </div>
 
@@ -47,12 +49,20 @@
                     <p><%= @hours_away_10k %></p>
                     <p><%= @days_away_10k %></p>
                     <p><%= @weeks_away_10k %></p>
-                    <a class="btn btn-primary btn-large btn-block" href="http://designmodo.com/flat">Give me a heads up</a>
+                    <a class="btn btn-primary btn-large btn-block" href="#prompt"
+     data-toggle="modal">Give me a heads up</a>
                   </div>
 
                 </div>
 
         </div>
 
-
+<div class="modal" id="prompt">
+    <% if loggedin? %>
+        <!-- user is logged in -->
+        <%= erb :emailprompt %>
+    <% else %> 
+        <%= erb :loginprompt %>
+    <% end %>
+</div>
 
