@@ -103,17 +103,17 @@ post '/index' do
    @total = @twclient.user(@handle)['statuses_count']
    @tweets = @twclient.user_timeline(@handle, :count => 100)
 
-   puts @tweets.first.text
-     puts newest = @tweets.first.created_at
-     puts @tweets.count
-     puts @tweets.last.text
-    puts oldest = @tweets.last.created_at
+   #puts @tweets.first.text
+      newest = @tweets.first.created_at
+     #puts @tweets.count
+     #puts @tweets.last.text
+     oldest = @tweets.last.created_at
 
     time_for_recent_tweets = difference = ((newest - oldest).abs).round
 
-    puts hours_for_recent_tweets = time_for_recent_tweets/(60*60)
-    puts days_for_recent_tweets = hours_for_recent_tweets/24
-    puts weeks_for_recent_tweets = days_for_recent_tweets/7
+    # puts hours_for_recent_tweets = time_for_recent_tweets/(60*60)
+    # puts days_for_recent_tweets = hours_for_recent_tweets/24
+    # puts weeks_for_recent_tweets = days_for_recent_tweets/7
 
    @averages_text = ""
    @far_away_text = "About "
@@ -189,9 +189,9 @@ get '/milestones' do
    #@tweets = @client.user_timeline(:count => 100)
    @tweets = @client.user_timeline(:count => 100)
 
-   puts newest = time_for(@tweets.first['created_at'])
+    newest = time_for(@tweets.first['created_at'])
 
-   puts oldest = time_for(@tweets.last['created_at'])
+    oldest = time_for(@tweets.last['created_at'])
 
 
 
@@ -202,9 +202,9 @@ get '/milestones' do
     #puts DateTime.parse(oldest)
     #time_for_recent_tweets = ((DateTime.parse(newest) - DateTime.parse(oldest)).abs).round
     time_for_recent_tweets = ((newest - oldest).abs).round
-    puts hours_for_recent_tweets = time_for_recent_tweets/(60*60)
-    puts days_for_recent_tweets = hours_for_recent_tweets/24
-    puts weeks_for_recent_tweets = days_for_recent_tweets/7
+    # puts hours_for_recent_tweets = time_for_recent_tweets/(60*60)
+    # puts days_for_recent_tweets = hours_for_recent_tweets/24
+    # puts weeks_for_recent_tweets = days_for_recent_tweets/7
 
    @averages_text = ""
    @far_away_text = "About "
