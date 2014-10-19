@@ -83,7 +83,9 @@ get '/' do
   if loggedin?
     redirect '/milestones'
   else
-    redirect '/index'
+    #redirect '/index'
+    @handle = "railsrumble"
+    erb :"welcome", layout: :"layouts/main"
   end
 end
 

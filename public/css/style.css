@@ -87,3 +87,16 @@ img#rr-logo {
     background-color: white;
     overflow:hidden;
 }
+
+.welcome {
+  text-align: center;
+
+}
+.guide p{
+  text-align: left;
+
+}
+
+form#twitterform {
+  margin-top: 1em;
+}
