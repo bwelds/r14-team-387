@@ -6,6 +6,7 @@ require 'data_mapper'
 require 'twitter'
 require 'twitter_oauth'
 require 'date'
+require 'mailgun'
 
 
 # use Rack::Auth::Basic, "Restricted Area" do |username, password|
@@ -17,6 +18,11 @@ configure do
     set :session_secret, ENV['SESSION_SECRET']
 
 end
+
+Mailgun.configure do |config|
+        config.api_key = ENV['MAILGUN_API_KEY']
+        config.domain  = ENV['MAILGUN_DOMAIN ']
+    end
 
 before do
   
@@ -187,6 +193,7 @@ get '/milestones' do
   
   # puts @client
   @total = @client.info['statuses_count']
+  @name = @client.info['name']
   
    #@tweets = @client.user_timeline(:count => 100)
    @tweets = @client.user_timeline(:count => 100)
@@ -283,7 +290,7 @@ get '/milestones' do
 	erb :milestones, layout: :"layouts/main"
 end
 
-post '/email' do
+get '/email' do
   erb :email, layout: :"layouts/main"
 end
 
@@ -292,6 +299,29 @@ get '/about' do
 	erb :about, layout: :"layouts/main"
 
 end
+
+get '/contact' do
+        erb :"contact", layout: :"layouts/main"
+    end
+
+    post '/contact' do
+        name = params[:name] || @client.info['name']
+        email = params[:email]
+        comment = params[:comment]
+        
+        
+        @mailgun = Mailgun()
+
+        parameters = {
+            :to => ENV['CONTACT_MAIL']  = 'bwelds@gmail.com',
+            :from => email,
+            :subject => "Miletweets Contact from #{name}",
+            :text => comment
+        }
+        
+        sent = @mailgun.messages.send_email(parameters)? (redirect '/email') : (redirect '/error')
+        
+    end
 
 # store the request tokens and send to Twitter
 get '/connect' do

@@ -19,6 +19,13 @@ ENV['TWITTER_ACCESS_TOKEN'] = '172169556-QjWr6Ri3LNmaUklhnRhGVo6kjFcnFS6WI3cIKy3
 ENV['TWITTER_ACCESS_TOKEN_SECRET'] = 'zxSWtXBJNREKJtK7V4roH9NbaMDHd9uLuAyI2gpm6nGwK'
 
 
+ENV['MAILGUN_API_KEY'] = 'key-889yy6870dgb2sym3fw-curxsnmlgcc1'
+ENV['MAILGUN_DOMAIN '] = 'sandbox81136.mailgun.org'
+
+
+
+ENV['CONTACT_MAIL']  = 'bwelds@gmail.com'
+
 
 ENV['SESSION_SECRET'] = '*&(^B234'
 

@@ -63,17 +63,23 @@ GEM
     http_parser.rb (0.6.0)
     json (1.8.1)
     json_pure (1.8.1)
+    mailgun (0.8)
+      rest-client
     memoizable (0.4.2)
       thread_safe (~> 0.3, >= 0.3.1)
     mime-types (2.4.2)
     multi_json (1.9.2)
     multipart-post (2.0.0)
     naught (1.0.0)
+    netrc (0.8.0)
     oauth (0.4.7)
     pg (0.17.1)
     rack (1.5.2)
     rack-protection (1.5.3)
       rack
+    rest-client (1.7.2)
+      mime-types (>= 1.16, < 3.0)
+      netrc (~> 0.7)
     simple_oauth (0.2.0)
     sinatra (1.4.5)
       rack (~> 1.4)
@@ -106,6 +112,7 @@ DEPENDENCIES
   bundler
   data_mapper
   dm-postgres-adapter
+  mailgun
   pg
   sinatra
   twitter
