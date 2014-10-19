@@ -138,7 +138,9 @@ post '/index' do
 
    @next_1k = next_highest(@total,1000)
    @next_5k = next_highest(@total,5000)
+   if @next_1k == @next_5k then @next_5k = next_highest(@total,10000) end
    @next_10k = next_highest(@total,10000)
+   if @next_5k == @next_10k then @next_10k = next_highest(@total,50000) end
 
 
    if hours_for_recent_tweets >= 1 
@@ -244,7 +246,9 @@ get '/milestones' do
 
    @next_1k = next_highest(@total,1000)
    @next_5k = next_highest(@total,5000)
+   if @next_1k == @next_5k then @next_5k = next_highest(@total,10000) end
    @next_10k = next_highest(@total,10000)
+   if @next_5k == @next_10k then @next_10k = next_highest(@total,50000) end
 
 
    if hours_for_recent_tweets >= 1 
