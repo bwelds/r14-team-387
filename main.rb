@@ -141,12 +141,21 @@ post '/index' do
    @next_10k = next_highest(@total,10000)
 
 
-   @average_per_hour = 100/hours_for_recent_tweets	   
-
-   @average_per_day = 100/days_for_recent_tweets
-
-
-   @average_per_week = 100/weeks_for_recent_tweets
+   if hours_for_recent_tweets >= 1 
+     @average_per_hour = 100/hours_for_recent_tweets 
+   else 
+      @average_per_hour = 0 
+  end  
+    if days_for_recent_tweets >= 1 
+       @average_per_day = 100/days_for_recent_tweets 
+     else 
+      @average_per_day = 0 
+    end
+   if weeks_for_recent_tweets >= 1 
+    @average_per_week = 100/weeks_for_recent_tweets 
+  else 
+    @average_per_week = 0 
+  end
 
 
    if @average_per_hour >= 1 
