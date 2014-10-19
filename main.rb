@@ -53,6 +53,8 @@ helpers do
             session[:user]
     end
 
+    
+
     def next_highest(total,divisor) 
     	distance = divisor - (total.to_i%divisor)
         result = total.to_i + distance
@@ -225,6 +227,8 @@ get '/milestones' do
   # puts @client
   @total = comma_numbers(@client.info['statuses_count'],',')
   @name = @client.info['name']
+  #@profile_image = "<img class='profile' src='" + @client.info['profile_image_url'] + "' >"
+  
   
    #@tweets = @client.user_timeline(:count => 100)
    @tweets = @client.user_timeline(:count => 100)
