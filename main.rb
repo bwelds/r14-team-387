@@ -117,7 +117,7 @@ post '/index' do
       erb :"content", layout: :"layouts/main"
     end
 
-   @total = @twclient.user(@handle)['statuses_count']
+   @total = comma_numbers(@twclient.user(@handle)['statuses_count'],',')
    @tweets = @twclient.user_timeline(@handle, :count => 100)
 
    #puts @tweets.first.text
@@ -128,9 +128,9 @@ post '/index' do
 
     time_for_recent_tweets = difference = ((newest - oldest).abs).round
 
-    hours_for_recent_tweets = time_for_recent_tweets/(60*60)
-    days_for_recent_tweets = hours_for_recent_tweets/24
-    weeks_for_recent_tweets = days_for_recent_tweets/7
+    hours_for_recent_tweets = (time_for_recent_tweets.to_f/(60*60)).ceil
+    days_for_recent_tweets = (hours_for_recent_tweets.to_f/24).ceil
+    weeks_for_recent_tweets = (days_for_recent_tweets.to_f/7).ceil
 
    @averages_text = ""
    @far_away_text = "About "
@@ -143,18 +143,24 @@ post '/index' do
    if @next_5k == @next_10k then @next_10k = next_highest(@total,50000) end
 
 
-   if hours_for_recent_tweets >= 1 
-     @average_per_hour = 100/hours_for_recent_tweets 
+   if hours_for_recent_tweets > 1 
+     @average_per_hour = 100/hours_for_recent_tweets
+    elsif hours_for_recent_tweets == 1
+      @average_per_hour = 100
    else 
       @average_per_hour = 0 
   end  
-    if days_for_recent_tweets >= 1 
+    if days_for_recent_tweets > 1 
        @average_per_day = 100/days_for_recent_tweets 
+     elsif days_for_recent_tweets == 1
+         @average_per_day = 100*(hours_for_recent_tweets.to_f/24).ceil
      else 
       @average_per_day = 0 
     end
-   if weeks_for_recent_tweets >= 1 
+   if weeks_for_recent_tweets > 1 
     @average_per_week = 100/weeks_for_recent_tweets 
+  elsif weeks_for_recent_tweets == 1
+      @average_per_week = @average_per_day*7
   else 
     @average_per_week = 0 
   end
@@ -169,9 +175,9 @@ post '/index' do
 
 	   	
 	   		
-	   	@hours_away_1k = @far_away_text + @hours_from_1k.to_s + " " + plural(@hours_from_1k.to_i,"hour") + " away"
-	   	@hours_away_5k = @far_away_text + @hours_from_5k.to_s + " " + plural(@hours_from_5k.to_i,"hour") + " away" 
-	   	@hours_away_10k = @far_away_text + @hours_from_10k.to_s + " " + plural(@hours_from_10k.to_i,"hour") + " away" 
+	   	@hours_away_1k = @far_away_text + comma_numbers(@hours_from_1k,',').to_s + " " + plural(@hours_from_1k.to_i,"hour") + " away"
+	   	@hours_away_5k = @far_away_text + comma_numbers(@hours_from_5k,',').to_s + " " + plural(@hours_from_5k.to_i,"hour") + " away" 
+	   	@hours_away_10k = @far_away_text + comma_numbers(@hours_from_10k,',').to_s + " " + plural(@hours_from_10k.to_i,"hour") + " away" 
 	   	
    end
    if @average_per_day >= 1 
@@ -181,9 +187,9 @@ post '/index' do
 	   	@days_from_10k = @next_10k[:distance]/@average_per_day
 	   	
 
-   		@days_away_1k = @far_away_text + @days_from_1k.to_s + " " + plural(@days_from_1k.to_i,"day")  + " away"
-	   	@days_away_5k = @far_away_text + @days_from_5k.to_s + " " + plural(@days_from_5k.to_i,"day")  + " away"
-	   	@days_away_10k = @far_away_text + @days_from_10k.to_s + " " + plural(@days_from_10k.to_i,"day")  + " away"
+   		@days_away_1k = @far_away_text + comma_numbers(@days_from_1k,',').to_s + " " + plural(@days_from_1k.to_i,"day")  + " away"
+	   	@days_away_5k = @far_away_text + comma_numbers(@days_from_5k,',').to_s + " " + plural(@days_from_5k.to_i,"day")  + " away"
+	   	@days_away_10k = @far_away_text + comma_numbers(@days_from_10k,',').to_s + " " + plural(@days_from_10k.to_i,"day")  + " away"
    	end
    if @average_per_week >= 1 
    		
@@ -191,10 +197,10 @@ post '/index' do
    		@weeks_from_5k = @next_5k[:distance]/@average_per_week
    		@weeks_from_10k = @next_10k[:distance]/@average_per_week
 
-   		@averages_text = @averages_text + @average_per_week.to_s + " " + plural(@average_per_week,"tweet") + " over an entire week." 
-   		@weeks_away_1k = @far_away_text + @weeks_from_1k.to_s + " " + plural(@weeks_from_1k.to_i,"week")  + " away"
-	   	@weeks_away_5k = @far_away_text + @weeks_from_5k.to_s + " " + plural(@weeks_from_5k.to_i,"week")  + " away"
-	   	@weeks_away_10k = @far_away_text + @weeks_from_10k.to_s + " " + plural(@weeks_from_10k.to_i,"week") + " away"
+   		@averages_text = @averages_text + comma_numbers(@average_per_week,',').to_s + " " + plural(@average_per_week,"tweet") + " over an entire week." 
+   		@weeks_away_1k = @far_away_text + comma_numbers(@weeks_from_1k,',').to_s + " " + plural(@weeks_from_1k.to_i,"week")  + " away"
+	   	@weeks_away_5k = @far_away_text + comma_numbers(@weeks_from_5k,',').to_s + " " + plural(@weeks_from_5k.to_i,"week")  + " away"
+	   	@weeks_away_10k = @far_away_text + comma_numbers(@weeks_from_10k,',').to_s + " " + plural(@weeks_from_10k.to_i,"week") + " away"
    	end
 
    	if @averages_text == ""
@@ -217,7 +223,7 @@ get '/milestones' do
   # puts "client"
   
   # puts @client
-  @total = @client.info['statuses_count']
+  @total = comma_numbers(@client.info['statuses_count'],',')
   @name = @client.info['name']
   
    #@tweets = @client.user_timeline(:count => 100)
@@ -236,9 +242,9 @@ get '/milestones' do
     #puts DateTime.parse(oldest)
     #time_for_recent_tweets = ((DateTime.parse(newest) - DateTime.parse(oldest)).abs).round
     time_for_recent_tweets = ((newest - oldest).abs).round
-    hours_for_recent_tweets = time_for_recent_tweets/(60*60)
-    days_for_recent_tweets = hours_for_recent_tweets/24
-    weeks_for_recent_tweets = days_for_recent_tweets/7
+    hours_for_recent_tweets = (time_for_recent_tweets.to_f/(60*60)).ceil
+    days_for_recent_tweets = (hours_for_recent_tweets.to_f/24).ceil
+    weeks_for_recent_tweets = (days_for_recent_tweets.to_f/7).ceil
 
    @averages_text = ""
    @far_away_text = "About "
@@ -251,18 +257,24 @@ get '/milestones' do
    if @next_5k == @next_10k then @next_10k = next_highest(@total,50000) end
 
 
-   if hours_for_recent_tweets >= 1 
-     @average_per_hour = 100/hours_for_recent_tweets 
+   if hours_for_recent_tweets > 1 
+     @average_per_hour = 100/hours_for_recent_tweets
+    elsif hours_for_recent_tweets == 1
+      @average_per_hour = 100
    else 
       @average_per_hour = 0 
   end  
-    if days_for_recent_tweets >= 1 
+    if days_for_recent_tweets > 1 
        @average_per_day = 100/days_for_recent_tweets 
+     elsif days_for_recent_tweets == 1
+         @average_per_day = 100*(hours_for_recent_tweets.to_f/24).ceil
      else 
       @average_per_day = 0 
     end
-   if weeks_for_recent_tweets >= 1 
+   if weeks_for_recent_tweets > 1 
     @average_per_week = 100/weeks_for_recent_tweets 
+  elsif weeks_for_recent_tweets == 1
+      @average_per_week = @average_per_day*7
   else 
     @average_per_week = 0 
   end
@@ -277,9 +289,9 @@ get '/milestones' do
 
       
         
-      @hours_away_1k = @far_away_text + @hours_from_1k.to_s + " " + plural(@hours_from_1k.to_i,"hour") + " away"
-      @hours_away_5k = @far_away_text + @hours_from_5k.to_s + " " + plural(@hours_from_5k.to_i,"hour") + " away" 
-      @hours_away_10k = @far_away_text + @hours_from_10k.to_s + " " + plural(@hours_from_10k.to_i,"hour") + " away" 
+      @hours_away_1k = @far_away_text + comma_numbers(@hours_from_1k,',').to_s + " " + plural(@hours_from_1k.to_i,"hour") + " away"
+      @hours_away_5k = @far_away_text + comma_numbers(@hours_from_5k,',').to_s + " " + plural(@hours_from_5k.to_i,"hour") + " away" 
+      @hours_away_10k = @far_away_text + comma_numbers(@hours_from_10k,',').to_s + " " + plural(@hours_from_10k.to_i,"hour") + " away" 
       
    end
    if @average_per_day >= 1 
@@ -289,9 +301,9 @@ get '/milestones' do
       @days_from_10k = @next_10k[:distance]/@average_per_day
       
 
-      @days_away_1k = @far_away_text + @days_from_1k.to_s + " " + plural(@days_from_1k.to_i,"day")  + " away"
-      @days_away_5k = @far_away_text + @days_from_5k.to_s + " " + plural(@days_from_5k.to_i,"day")  + " away"
-      @days_away_10k = @far_away_text + @days_from_10k.to_s + " " + plural(@days_from_10k.to_i,"day")  + " away"
+      @days_away_1k = @far_away_text + comma_numbers(@days_from_1k,',').to_s + " " + plural(@days_from_1k.to_i,"day")  + " away"
+      @days_away_5k = @far_away_text + comma_numbers(@days_from_5k,',').to_s + " " + plural(@days_from_5k.to_i,"day")  + " away"
+      @days_away_10k = @far_away_text + comma_numbers(@days_from_10k,',').to_s + " " + plural(@days_from_10k.to_i,"day")  + " away"
     end
    if @average_per_week >= 1 
       
@@ -299,10 +311,10 @@ get '/milestones' do
       @weeks_from_5k = @next_5k[:distance]/@average_per_week
       @weeks_from_10k = @next_10k[:distance]/@average_per_week
 
-      @averages_text = @averages_text + @average_per_week.to_s + " " + plural(@average_per_week,"tweet") + " over an entire week." 
-      @weeks_away_1k = @far_away_text + @weeks_from_1k.to_s + " " + plural(@weeks_from_1k.to_i,"week")  + " away"
-      @weeks_away_5k = @far_away_text + @weeks_from_5k.to_s + " " + plural(@weeks_from_5k.to_i,"week")  + " away"
-      @weeks_away_10k = @far_away_text + @weeks_from_10k.to_s + " " + plural(@weeks_from_10k.to_i,"week") + " away"
+      @averages_text = @averages_text + comma_numbers(@average_per_week,',').to_s + " " + plural(@average_per_week,"tweet") + " over an entire week." 
+      @weeks_away_1k = @far_away_text + comma_numbers(@weeks_from_1k,',').to_s + " " + plural(@weeks_from_1k.to_i,"week")  + " away"
+      @weeks_away_5k = @far_away_text + comma_numbers(@weeks_from_5k,',').to_s + " " + plural(@weeks_from_5k.to_i,"week")  + " away"
+      @weeks_away_10k = @far_away_text + comma_numbers(@weeks_from_10k,',').to_s + " " + plural(@weeks_from_10k.to_i,"week") + " away"
     end
 
     if @averages_text == ""
