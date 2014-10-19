@@ -411,7 +411,9 @@ not_found do
     erb :"notfound", layout: :"layouts/main"
 end
 
-
+get '/back' do
+  redirect back
+end
 
 
 
