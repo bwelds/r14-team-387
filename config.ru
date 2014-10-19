@@ -3,10 +3,12 @@ Bundler.require
 
 configure :development do
 	DataMapper.setup(:default, ENV['DATABASE_URL'] || 'postgres://localhost/mydb')
+	ENV['CALLBACK_URL'] = 'http://localhost:9292/auth'
 end
 
 configure :production do
 	DataMapper.setup(:default, ENV['HEROKU_POSTGRESQL_ROSE_URL'])
+	ENV['CALLBACK_URL'] = 'http://bdw.r14.railsrumble.com/auth'
 end
 
 
@@ -16,7 +18,7 @@ ENV['TWITTER_CONSUMER_SECRET'] = 'l4BmrNgso4WgdfdfFGICGwzABDyJ362p1DtxyWWe5jFbUu
 ENV['TWITTER_ACCESS_TOKEN'] = '172169556-QjWr6Ri3LNmaUklhnRhGVo6kjFcnFS6WI3cIKy3L'
 ENV['TWITTER_ACCESS_TOKEN_SECRET'] = 'zxSWtXBJNREKJtK7V4roH9NbaMDHd9uLuAyI2gpm6nGwK'
 
-ENV['CALLBACK_URL'] = 'http://localhost:9292/auth'
+
 
 ENV['SESSION_SECRET'] = '*&(^B234'
 
