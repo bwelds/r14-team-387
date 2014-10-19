@@ -324,7 +324,7 @@ get '/milestones' do
     if @averages_text == ""
       @averages_text = "Not enough tweets to calculate averages"
     else
-      @averages_text = "and makes on average " + @averages_text
+      @averages_text = "and make on average " + @averages_text
     end
 
 
