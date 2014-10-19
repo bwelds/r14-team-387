@@ -67,7 +67,8 @@
 <div class="modal" id="prompt">
 	<% if loggedin? %>
 		<!-- user is logged in -->
-		<%= erb :emailprompt %>
+		<%= erb :messageprompt %>
+		
 	<% else %> 
 		<%= erb :loginprompt %>
 	<% end %>

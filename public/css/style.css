@@ -81,7 +81,7 @@ img#rr-logo {
   #prompt {
     /*new custom width*/
     width: 50%;
-    height: 320px;
+    height: 340px;
     /*must be half of the width, minus scrollbar on the left (30px)*/
    margin: 25% 0 0 25%;
     background-color: white;
