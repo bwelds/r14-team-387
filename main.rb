@@ -8,9 +8,9 @@ require 'twitter_oauth'
 require 'date'
 
 
-use Rack::Auth::Basic, "Restricted Area" do |username, password|
-  username == 'bianca' and password == 'whatthehell'
-end
+# use Rack::Auth::Basic, "Restricted Area" do |username, password|
+#   username == 'bianca' and password == 'whatthehell'
+# end
 
 configure do
     enable :sessions
