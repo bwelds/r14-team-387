@@ -111,9 +111,9 @@ post '/index' do
 
     time_for_recent_tweets = difference = ((newest - oldest).abs).round
 
-    # puts hours_for_recent_tweets = time_for_recent_tweets/(60*60)
-    # puts days_for_recent_tweets = hours_for_recent_tweets/24
-    # puts weeks_for_recent_tweets = days_for_recent_tweets/7
+    hours_for_recent_tweets = time_for_recent_tweets/(60*60)
+    days_for_recent_tweets = hours_for_recent_tweets/24
+    weeks_for_recent_tweets = days_for_recent_tweets/7
 
    @averages_text = ""
    @far_away_text = "About "
@@ -202,9 +202,9 @@ get '/milestones' do
     #puts DateTime.parse(oldest)
     #time_for_recent_tweets = ((DateTime.parse(newest) - DateTime.parse(oldest)).abs).round
     time_for_recent_tweets = ((newest - oldest).abs).round
-    # puts hours_for_recent_tweets = time_for_recent_tweets/(60*60)
-    # puts days_for_recent_tweets = hours_for_recent_tweets/24
-    # puts weeks_for_recent_tweets = days_for_recent_tweets/7
+    hours_for_recent_tweets = time_for_recent_tweets/(60*60)
+    days_for_recent_tweets = hours_for_recent_tweets/24
+    weeks_for_recent_tweets = days_for_recent_tweets/7
 
    @averages_text = ""
    @far_away_text = "About "

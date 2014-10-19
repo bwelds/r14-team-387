@@ -28,7 +28,7 @@ body   {
     padding-top: 20px;
     padding-bottom: 20px;
     position: absolute;
-    top: 0px;
+    top: 30px;
     left: 0px;
     background:#2C3E50;
     text-align:center;
@@ -41,14 +41,31 @@ body   {
     text-align: center;
     width: 100%;
     position: absolute;
-    height: 72px;
+    height: auto;
     background:#ECF0F1;
     padding-top: 20px;
 }
+.footer p {
+  font-size: 1em;
+  line-height: 1em;
+
+}
+
+
 
 h1 {
   text-align: center;
 }
+
+img {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+img#rr-logo {
+  height: 45px;
+}
+
 
 .img-thumbnail {
   width:250px;
